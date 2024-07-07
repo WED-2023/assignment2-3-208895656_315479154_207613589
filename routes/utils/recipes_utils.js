@@ -45,6 +45,7 @@ async function getRecipesPreview(recipe_ids) {
 
 
 async function getRecipeDetails(recipe_id) {
+    console.log("getRecipeDetails", recipe_id);
     let recipe_info = await getRecipeInformation(recipe_id);
     let { id, title, readyInMinutes, image, aggregateLikes, vegan, vegetarian, glutenFree } = recipe_info.data;
 
@@ -77,9 +78,29 @@ async function searchRecipe(recipeName, cuisine, diet, intolerance, number, user
 }
 
 
+async function getRandomRecipes() {
+    try {
+        const response = await axios.get(`${api_domain}/random`, {
+            params: {
+                number: 3, // Specify the number of random recipes you want
+                apiKey: process.env.spooncular_apiKey
+            }
+        });
+        const recipeIds = response.data.recipes.map(recipe => recipe.id); // Assuming the API returns an array of recipe objects
+
+        // Use getRecipesPreview to fetch details and format them
+        return await getRecipesPreview(recipeIds);
+    } catch (error) {
+        console.error('Failed to fetch random recipes:', error);
+        throw error;
+    }
+}
+
+
 module.exports = {
     getRecipeDetails,
-    searchRecipe
+    searchRecipe,
+    getRandomRecipes
 };
 
 

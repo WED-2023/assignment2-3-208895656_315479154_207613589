@@ -10,7 +10,6 @@ connectionLimit:4,
   database:"mydb"
 }
 
-console.log('MySQL Config:', config);
 
 const pool = new mysql.createPool(config);
 
