@@ -20,6 +20,30 @@ async function getRecipeInformation(recipe_id) {
 
 
 
+async function getRecipesPreview(recipe_ids) {
+    try {
+        let promises = recipe_ids.map((id) => getRecipeInformation(id));
+        let recipes = await Promise.all(promises);
+        return recipes.map((recipe_info) => {
+            let { id, title, readyInMinutes, image, aggregateLikes, vegan, vegetarian, glutenFree } = recipe_info.data;
+            return {
+                id: id,
+                title: title,
+                readyInMinutes: readyInMinutes,
+                image: image,
+                popularity: aggregateLikes,
+                vegan: vegan,
+                vegetarian: vegetarian,
+                glutenFree: glutenFree
+            };
+        });
+    } catch (error) {
+        throw error;
+    }
+}
+
+
+
 async function getRecipeDetails(recipe_id) {
     let recipe_info = await getRecipeInformation(recipe_id);
     let { id, title, readyInMinutes, image, aggregateLikes, vegan, vegetarian, glutenFree } = recipe_info.data;
@@ -53,8 +77,9 @@ async function searchRecipe(recipeName, cuisine, diet, intolerance, number, user
 }
 
 
-
-exports.getRecipeDetails = getRecipeDetails;
-
+module.exports = {
+    getRecipeDetails,
+    searchRecipe
+};
 
 

@@ -6,9 +6,12 @@ const config={
 connectionLimit:4,
   host: process.env.host,//"localhost"
   user: process.env.user,//"root"
-  password: "pass_root@123",
+  password: process.env.password || "pass_root@123",
   database:"mydb"
 }
+
+console.log('MySQL Config:', config);
+
 const pool = new mysql.createPool(config);
 
 const connection =  () => {
@@ -44,10 +47,3 @@ const query = (sql, binding) => {
   });
 };
 module.exports = { pool, connection, query };
-
-
-
-
-
-
-
