@@ -1,10 +1,32 @@
 SELECT * FROM mydb.users;
 
-CREATE TABLE users (
-    username VARCHAR(8) NOT NULL UNIQUE PRIMARY KEY,
-    firstname VARCHAR(255) NOT NULL,
-    lastname VARCHAR(255) NOT NULL,
-    country VARCHAR(255) NOT NULL,
-    password VARCHAR(60) NOT NULL,
-    email VARCHAR(255) NOT NULL 
+-- Create Users Table
+-- CREATE TABLE users (
+--     user_id INT AUTO_INCREMENT PRIMARY KEY,
+--     username VARCHAR(8) NOT NULL UNIQUE,
+--     firstname VARCHAR(255) NOT NULL,
+--     lastname VARCHAR(255) NOT NULL,
+--     country VARCHAR(255) NOT NULL,
+--     email VARCHAR(255) NOT NULL,
+--     password VARCHAR(60) NOT NULL
+-- );
+
+
+CREATE TABLE favoriterecipes(
+    user_id INT PRIMARY KEY,
+    recipe_id INT NOT NULL
+)
+
+
+-- INSERT INTO users (username, firstname, lastname, country, email, password) 
+-- VALUES ('galevi', 'gal', 'levi', 'israel', 'galevi@example.com', 'gal123');
+
+CREATE TABLE last_watched (
+    user_id INT PRIMARY KEY,
+    recipe_ids JSON,
+    CONSTRAINT recipe_ids_max_length CHECK (JSON_LENGTH(recipe_ids) <= 3)
 );
+
+-- Insert a new user with a single recipe
+INSERT INTO last_watched (user_id, recipe_ids) VALUES (3, JSON_ARRAY(104, 105, 103));
+

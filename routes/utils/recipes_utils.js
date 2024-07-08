@@ -97,10 +97,13 @@ async function getRandomRecipes() {
 }
 
 
+
+
 module.exports = {
     getRecipeDetails,
     searchRecipe,
-    getRandomRecipes
+    getRandomRecipes,
+    getRecipesPreview
 };
 
 
