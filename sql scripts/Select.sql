@@ -21,12 +21,11 @@ CREATE TABLE favoriterecipes(
 -- INSERT INTO users (username, firstname, lastname, country, email, password) 
 -- VALUES ('galevi', 'gal', 'levi', 'israel', 'galevi@example.com', 'gal123');
 
-CREATE TABLE last_watched (
+CREATE TABLE meal_plan (
     user_id INT PRIMARY KEY,
-    recipe_ids JSON,
-    CONSTRAINT recipe_ids_max_length CHECK (JSON_LENGTH(recipe_ids) <= 3)
+    recipe_ids JSON
 );
 
 -- Insert a new user with a single recipe
-INSERT INTO last_watched (user_id, recipe_ids) VALUES (3, JSON_ARRAY(104, 105, 103));
+INSERT INTO meal_plan (user_id, recipe_ids) VALUES (3, JSON_ARRAY());
 

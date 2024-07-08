@@ -63,7 +63,7 @@ router.get('/favorites', async (req,res,next) => {
 });
 
 
-router.post('/watch', async (req,res,next) => {
+router.post('/last_watch', async (req,res,next) => {
   try{
     const user_id = req.session.user_id;
     const recipe_id = req.body.recipeId;
@@ -80,15 +80,64 @@ router.post('/watch', async (req,res,next) => {
 router.get('/last_watch', async (req,res,next) => {
   try{
     const user_id = req.session.user_id;
-    let last_watch_recipes = {};
     const recipes_id = await user_utils.getLastWatchedRecipes(user_id);
-    // let recipes_id_array = [];
-    // recipes_id.map((element) => recipes_id_array.push(element.recipe_id)); //extracting the recipe ids into array
-    console.log(recipes_id);
     const results = await recipe_utils.getRecipesPreview(recipes_id);
     res.status(200).send(results);
   } catch(error){
     next(error); 
+  }
+});
+
+
+router.get('/meal_plan', async (req, res, next) => {
+  try{
+    const user_id = req.session.user_id;
+    const recipes_id = await user_utils.getMealPlan(user_id);
+    const results = await recipe_utils.getRecipesPreview(recipes_id);
+    res.status(200).send(results);
+  } catch(error){
+    next(error);
+  }
+});
+
+router.post('/meal_plan', async (req,res,next) => {
+  try{
+    const user_id = req.session.user_id;
+    const recipe_id = req.body.recipeId;
+    const isRecipeExist = await user_utils.checkIfRecipeExistInMealPlan(user_id, recipe_id);
+    if (isRecipeExist) {
+      res.status(400).send("Recipe already exists in meal plan");
+    } else {
+      await user_utils.add_to_meal_plan(user_id, recipe_id);
+      res.status(200).send("The Recipe successfully saved as meal plan");
+    }
+  } catch(error){
+    next(error);
+  }
+});
+
+
+
+router.delete('/meal_plan', async (req,res,next) => {
+  try{
+    const user_id = req.session.user_id;
+    const recipe_id = req.body.recipeId;
+    await user_utils.deleteRecipeFromMealPlan(user_id, recipe_id);
+    res.status(200).send("The Recipe successfully deleted from meal plan");
+  } catch(error){
+    next(error);
+  }
+});
+
+
+router.put('/meal_plan', async (req,res,next) => {
+  try{
+    const user_id = req.session.user_id;
+    const recipes_id = req.body.recipesId;
+    await user_utils.update_meal_plan(user_id, recipes_id);
+    res.status(200).send("The Recipe successfully updated in meal plan");
+  } catch(error){
+    next(error);
   }
 });
 

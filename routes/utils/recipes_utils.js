@@ -103,7 +103,8 @@ module.exports = {
     getRecipeDetails,
     searchRecipe,
     getRandomRecipes,
-    getRecipesPreview
+    getRecipesPreview,
+    getRecipeInformation
 };
 
 
