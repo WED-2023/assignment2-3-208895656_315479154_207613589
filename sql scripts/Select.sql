@@ -21,7 +21,7 @@ CREATE TABLE favoriterecipes(
 -- INSERT INTO users (username, firstname, lastname, country, email, password) 
 -- VALUES ('galevi', 'gal', 'levi', 'israel', 'galevi@example.com', 'gal123');
 
-CREATE TABLE meal_plan (
+CREATE TABLE viewd_recipes (
     user_id INT PRIMARY KEY,
     recipe_ids JSON
 );

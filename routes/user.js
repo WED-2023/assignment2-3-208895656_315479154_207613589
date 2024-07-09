@@ -69,7 +69,7 @@ router.post('/last_watch', async (req,res,next) => {
     const recipe_id = req.body.recipeId;
     console.log(recipe_id)
     console.log(user_id)
-    await user_utils.markAsWatched(user_id, recipe_id);
+    await user_utils.markAsLastWatched(user_id, recipe_id);
     res.status(200).send("The Recipe successfully saved as watched");
     } catch(error){
     next(error);
@@ -136,6 +136,23 @@ router.put('/meal_plan', async (req,res,next) => {
     const recipes_id = req.body.recipesId;
     await user_utils.update_meal_plan(user_id, recipes_id);
     res.status(200).send("The Recipe successfully updated in meal plan");
+  } catch(error){
+    next(error);
+  }
+});
+
+
+router.post('/viewd_recipes', async (req,res,next) => {
+  try{
+    const user_id = req.session.user_id;
+    const recipe_id = req.body.recipeId;
+    const isRecipeViewed = await user_utils.checkIfRecipeViewed(user_id, recipe_id);
+    if (isRecipeViewed) {
+      res.status(200).send("The Recipe was already viewed");
+    } else {
+      await user_utils.markAsViewed(user_id, recipe_id);
+      res.status(200).send("The Recipe successfully saved as viewed");
+    }
   } catch(error){
     next(error);
   }

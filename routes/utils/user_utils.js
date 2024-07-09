@@ -4,7 +4,7 @@ async function markAsFavorite(user_id, recipe_id){
     await DButils.execQuery(`insert into FavoriteRecipes values ('${user_id}',${recipe_id})`);
 }
 
-async function markAsWatched(user_id, recipe_id) {
+async function markAsLastWatched(user_id, recipe_id) {
     // Fetch the current recipe_ids for the user
     const userRecord = await DButils.execQuery(`SELECT recipe_ids FROM last_watched WHERE user_id = ${user_id}`);
     if (userRecord.length === 0) {
@@ -45,7 +45,6 @@ async function add_to_meal_plan(user_id, recipe_id) {
         let recipeIds = userRecord[0].recipe_ids
         // Add the new recipe_id at the end
         recipeIds.push(recipe_id);
-        // Ensure the array has at most 3 elements
         // Update the user's recipe_ids in the database
         await DButils.execQuery(`UPDATE meal_plan SET recipe_ids = JSON_ARRAY(${recipeIds.join(', ')}) WHERE user_id = ${user_id}`);
     }
@@ -95,16 +94,43 @@ async function getMealPlan(user_id) {
 }
 
 
+async function markAsViewed(user_id, recipe_id){
+    const userRecord = await DButils.execQuery(`SELECT recipe_ids FROM viewed_recipes WHERE user_id = ${user_id}`);
+    if (userRecord.length === 0) {
+        // If user doesn't exist, insert a new record
+        await DButils.execQuery(`INSERT INTO viewed_recipes (user_id, recipe_ids) VALUES (${user_id}, JSON_ARRAY(${recipe_id}))`);
+    } else {
+        // If user exists, update the recipe_ids
+        let recipeIds = userRecord[0].recipe_ids
+        // Add the new recipe_id at the end
+        recipeIds.push(recipe_id);
+        // Update the user's recipe_ids in the database
+        await DButils.execQuery(`UPDATE viewed_recipes SET recipe_ids = JSON_ARRAY(${recipeIds.join(', ')}) WHERE user_id = ${user_id}`);
+    }
+}
+
+
+async function checkIfRecipeViewed(user_id, recipe_id) {
+    const userRecord = await DButils.execQuery(`SELECT recipe_ids FROM viewed_recipes WHERE user_id = ${user_id}`);
+    if (userRecord.length === 0) {
+        return false;
+    } else {
+        return userRecord[0].recipe_ids.includes(recipe_id);
+    }
+}
+
 exports.markAsFavorite = markAsFavorite;
 exports.getFavoriteRecipes = getFavoriteRecipes;
 module.exports = {
     markAsFavorite,
     getFavoriteRecipes,
-    markAsWatched,
+    markAsLastWatched,
     getLastWatchedRecipes,
     getMealPlan,
     add_to_meal_plan,
     checkIfRecipeExistInMealPlan,
     deleteRecipeFromMealPlan,
-    update_meal_plan
+    update_meal_plan,
+    markAsViewed,
+    checkIfRecipeViewed
 };
