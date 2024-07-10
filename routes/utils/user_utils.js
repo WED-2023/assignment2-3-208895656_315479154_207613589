@@ -1,7 +1,7 @@
 const DButils = require("./DButils");
 
 async function markAsFavorite(user_id, recipe_id){
-    await DButils.execQuery(`insert into FavoriteRecipes values ('${user_id}',${recipe_id})`);
+    await DButils.execQuery(`insert into favorite_recipes values ('${user_id}',${recipe_id})`);
 }
 
 async function markAsLastWatched(user_id, recipe_id) {
@@ -77,7 +77,7 @@ async function update_meal_plan(user_id, recipes_id) {
 
 
 async function getFavoriteRecipes(user_id){
-    const recipes_id = await DButils.execQuery(`select recipe_id from FavoriteRecipes where user_id='${user_id}'`);
+    const recipes_id = await DButils.execQuery(`select recipe_id from favorite_recipes where user_id='${user_id}'`);
     return recipes_id;
 }
 
@@ -119,8 +119,60 @@ async function checkIfRecipeViewed(user_id, recipe_id) {
     }
 }
 
-exports.markAsFavorite = markAsFavorite;
-exports.getFavoriteRecipes = getFavoriteRecipes;
+
+async function checkIfRecipeExistInMyRecipes(user_id, title){
+    const userRecord = await DButils.execQuery(`SELECT title FROM my_recipes WHERE user_id = ${user_id}`);
+    if (userRecord.length === 0) {
+        return false;
+    } else {
+        return userRecord[0].title.includes(title);
+    }
+
+}
+
+
+async function AddToMyRecipes(user_id, title, analyzedInstructions, extendedIngredients, image, vegetarian, vegan, glutenFree, readyInMinutes, servings){
+    await DButils.execQuery(`INSERT INTO my_recipes (user_id, title, analyzedInstructions, extendedIngredients, image, vegetarian, vegan, glutenFree, readyInMinutes, servings) VALUES (${user_id}, '${title}', '${JSON.stringify(analyzedInstructions)}', '${JSON.stringify(extendedIngredients)}', '${image}', ${vegetarian}, ${vegan}, ${glutenFree}, ${readyInMinutes}, ${servings})`);
+}
+
+
+async function getMyRecipes(user_id) {
+    try {
+      // SQL query to fetch recipes
+  
+      // Execute the query using DButils.execQuery
+      const recipes = await DButils.execQuery(`
+        SELECT 
+            vegetarian, vegan, glutenFree, extendedIngredients, title, 
+            readyInMinutes, servings, image, analyzedInstructions
+        FROM my_recipes
+        WHERE user_id = ${user_id}`);
+  
+      // If no recipes found, return an empty object
+      if (recipes.length === 0) {
+        return {};
+      }
+  
+      // Transform the result into the desired JSON format
+      const formattedRecipes = recipes.map(row => ({
+        vegetarian: row.vegetarian,
+        vegan: row.vegan,
+        glutenFree: row.glutenFree,
+        extendedIngredients: typeof row.extendedIngredients === 'string' ? JSON.parse(row.extendedIngredients) : row.extendedIngredients,
+        title: row.title,
+        readyInMinutes: row.readyInMinutes,
+        servings: row.servings,
+        image: row.image,
+        analyzedInstructions: typeof row.analyzedInstructions === 'string' ? JSON.parse(row.analyzedInstructions) : row.analyzedInstructions
+    }));
+  
+      return formattedRecipes;
+    } catch (error) {
+      console.error('Error fetching recipes:', error.message);
+      throw error;
+    }
+}
+
 module.exports = {
     markAsFavorite,
     getFavoriteRecipes,
@@ -132,5 +184,8 @@ module.exports = {
     deleteRecipeFromMealPlan,
     update_meal_plan,
     markAsViewed,
-    checkIfRecipeViewed
+    checkIfRecipeViewed,
+    checkIfRecipeExistInMyRecipes,
+    AddToMyRecipes,
+    getMyRecipes
 };

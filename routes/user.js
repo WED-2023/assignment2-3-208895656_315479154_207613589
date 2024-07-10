@@ -50,7 +50,6 @@ router.post('/favorites', async (req,res,next) => {
 router.get('/favorites', async (req,res,next) => {
   try{
     const user_id = req.session.user_id;
-    let favorite_recipes = {};
     const recipes_id = await user_utils.getFavoriteRecipes(user_id);
     let recipes_id_array = [];
     recipes_id.map((element) => recipes_id_array.push(element.recipe_id)); //extracting the recipe ids into array
@@ -153,6 +152,44 @@ router.post('/viewd_recipes', async (req,res,next) => {
       await user_utils.markAsViewed(user_id, recipe_id);
       res.status(200).send("The Recipe successfully saved as viewed");
     }
+  } catch(error){
+    next(error);
+  }
+});
+
+
+router.post('/my_recipes', async (req,res,next) => {
+  try{
+    const user_id = req.session.user_id;
+    const title = req.body.title;
+    const isRecipeExist = await user_utils.checkIfRecipeExistInMyRecipes(user_id, title);
+    if (isRecipeExist) {
+      res.status(400).send("Recipe name already exists in my recipes");
+    } else {
+      const analyzedInstructions = req.body.analyzedInstructions;
+      const extendedIngredients = req.body.extendedIngredients;
+      const image = req.body.image;
+      const vegetarian = req.body.vegetarian;
+      const vegan = req.body.vegan;
+      const glutenFree = req.body.glutenFree;
+      const readyInMinutes = req.body.readyInMinutes;
+      const servings = req.body.servings;
+      console.log("before AddToMyRecipes")
+      await user_utils.AddToMyRecipes(user_id, title, analyzedInstructions, extendedIngredients, image, vegetarian, vegan, glutenFree, readyInMinutes, servings);
+      console.log("after AddToMyRecipes")
+      res.status(200).send("The Recipe successfully saved as my recipe");
+    }
+  } catch(error){
+    next(error);
+  }
+});
+
+
+router.get('/my_recipes', async (req,res,next) => {
+  try{
+    const user_id = req.session.user_id;
+    const recipes = await user_utils.getMyRecipes(user_id);
+    res.status(200).send(recipes);
   } catch(error){
     next(error);
   }
