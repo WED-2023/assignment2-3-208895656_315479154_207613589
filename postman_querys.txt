@@ -73,6 +73,12 @@ http://localhost:80/users/meal_plan :
     "recipeId": 789
 }
 
+GET
+http://localhost:80/users//meal_plan_count :
+{
+
+}
+
 PUT
 http://localhost:80/users/meal_plan :
 {

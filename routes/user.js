@@ -116,7 +116,6 @@ router.post('/meal_plan', async (req,res,next) => {
 });
 
 
-
 router.delete('/meal_plan', async (req,res,next) => {
   try{
     const user_id = req.session.user_id;
@@ -135,6 +134,17 @@ router.put('/meal_plan', async (req,res,next) => {
     const recipes_id = req.body.recipesId;
     await user_utils.update_meal_plan(user_id, recipes_id);
     res.status(200).send("The Recipe successfully updated in meal plan");
+  } catch(error){
+    next(error);
+  }
+});
+
+
+router.get('/meal_plan_count', async (req,res,next) => {
+  try{
+    const user_id = req.session.user_id;
+    const recipes_id = await user_utils.getMealPlan(user_id);
+    res.status(200).send({"count": recipes_id.length});
   } catch(error){
     next(error);
   }
