@@ -8,7 +8,7 @@ http://localhost:80/auth/login  :
 }
 
 POST
-http://localhost:80/Register
+http://localhost:80/auth/Register
 Content-Type: application/json
 
 {
@@ -22,7 +22,7 @@ Content-Type: application/json
 }
 
 POST
-http://localhost:80/Login
+http://localhost:80/auth/Login
 Content-Type: application/json
 
 {
@@ -31,7 +31,7 @@ Content-Type: application/json
 }
 
 POST
-http://localhost:80/Logout
+http://localhost:80/auth/Logout
 Content-Type: application/json
 
 
@@ -82,7 +82,7 @@ http://localhost:80/users//meal_plan_count :
 PUT
 http://localhost:80/users/meal_plan :
 {
-    "recipesId": [111, 222]
+    "recipesId": [25, 60, 80, 1000]
 }
 
 POST
@@ -127,12 +127,6 @@ http://localhost:80/users/my_recipes  :
 recipes:
 
 GET
-http://localhost:80/
-Content-Type: application/json
-
-{}
-
-GET
 http://localhost:80/kaki
 Content-Type: application/json
 
@@ -150,19 +144,11 @@ http://localhost:80/recipes/search
 
 
 GET
-http://localhost:80/random
-Content-Type: application/json
-
+http://localhost:80/recipes/full_view/123
 {}
 
 GET
-http://localhost:80/full_view/123
-Content-Type: application/json
-
-{}
-
-GET
-http://localhost:80/123
+http://localhost:80/recipes/123
 Content-Type: application/json
 
 {}

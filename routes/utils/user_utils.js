@@ -1,7 +1,27 @@
 const DButils = require("./DButils");
 
 async function markAsFavorite(user_id, recipe_id){
-    await DButils.execQuery(`insert into favorite_recipes values ('${user_id}',${recipe_id})`);
+    const userRecord = await DButils.execQuery(`SELECT recipes_id FROM favorite_recipes WHERE user_id = ${user_id}`);
+    if (userRecord.length === 0) {
+        // If user doesn't exist, insert a new record
+        await DButils.execQuery(`INSERT INTO favorite_recipes (user_id, recipes_id) VALUES (${user_id}, JSON_ARRAY(${recipe_id}))`);
+    } else {
+        // If user exists, update the recipe_ids
+        let recipeIds = userRecord[0].recipes_id
+        // Add the new recipe_id at the end
+        recipeIds.push(recipe_id);
+        // Update the user's recipe_ids in the database
+        await DButils.execQuery(`UPDATE favorite_recipes SET recipes_id = JSON_ARRAY(${recipeIds.join(', ')}) WHERE user_id = ${user_id}`);
+    }
+}
+
+
+async function deleteRecipeFromFavorites(user_id, recipe_id) {
+    const userRecord = await DButils.execQuery(`SELECT recipes_id FROM favorite_recipes WHERE user_id = ${user_id}`);
+    let recipeIds = userRecord[0].recipes_id
+    const recipeIndex = recipeIds.indexOf(recipe_id);
+    recipeIds.splice(recipeIndex, 1);
+    await DButils.execQuery(`UPDATE favorite_recipes SET recipes_id = JSON_ARRAY(${recipeIds.join(', ')}) WHERE user_id = ${user_id}`);
 }
 
 async function markAsLastWatched(user_id, recipe_id) {
@@ -77,8 +97,8 @@ async function update_meal_plan(user_id, recipes_id) {
 
 
 async function getFavoriteRecipes(user_id){
-    const recipes_id = await DButils.execQuery(`select recipe_id from favorite_recipes where user_id='${user_id}'`);
-    return recipes_id;
+    const userRecord = await DButils.execQuery(`select recipes_id from favorite_recipes where user_id='${user_id}'`);
+    return userRecord[0].recipes_id;
 }
 
 
@@ -107,6 +127,12 @@ async function markAsViewed(user_id, recipe_id){
         // Update the user's recipe_ids in the database
         await DButils.execQuery(`UPDATE viewed_recipes SET recipe_ids = JSON_ARRAY(${recipeIds.join(', ')}) WHERE user_id = ${user_id}`);
     }
+}
+
+
+async function getViewedRecipes(user_id){
+    const userRecord = await DButils.execQuery(`SELECT recipe_ids FROM viewed_recipes WHERE user_id = ${user_id}`);
+    return userRecord[0].recipe_ids;
 }
 
 
@@ -187,5 +213,6 @@ module.exports = {
     checkIfRecipeViewed,
     checkIfRecipeExistInMyRecipes,
     AddToMyRecipes,
-    getMyRecipes
+    getMyRecipes,
+    getViewedRecipes
 };
