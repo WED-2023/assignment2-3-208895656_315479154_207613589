@@ -8,8 +8,6 @@ const recipe_utils = require("./utils/recipes_utils");
  * Authenticate all incoming requests by middleware
  */
 router.use(async function (req, res, next) {
-  // console.log(req.session.user_id)
-  // console.log(req.session)
   if (req.session && req.session.user_id) {
     DButils.execQuery("SELECT user_id FROM users").then((users) => {
       // console.log(users)
@@ -35,8 +33,8 @@ router.post('/favorites', async (req,res,next) => {
   try{
     const user_id = req.session.user_id;
     const recipe_id = req.body.recipeId;
-    console.log(recipe_id);
-    console.log(user_id);
+    // console.log(recipe_id);
+    // console.log(user_id);
     await user_utils.markAsFavorite(user_id,recipe_id);
     res.status(200).send("The Recipe successfully saved as favorite");
     } catch(error){
@@ -61,6 +59,31 @@ router.get('/favorites', async (req,res,next) => {
   } catch(error){
     next(error); 
   }
+});
+
+
+router.delete('/favorites', async (req,res,next) => {
+  try{
+    const user_id = req.session.user_id;
+    const recipe_id = req.body.recipeId;
+    await user_utils.deleteRecipeFromFavorites(user_id, recipe_id);
+    res.status(200).send("The Recipe successfully deleted from favorites");
+  } catch(error){
+    next(error);
+  }
+});
+
+
+router.get('/is_favorite', async (req,res,next) => {
+  try{
+    const user_id = req.session.user_id;
+    const recipe_id = req.query.recipeId;
+    const isFavorite = await user_utils.checkIfRecipeExistInFavorites(user_id, recipe_id);
+    res.status(200).send(isFavorite);
+  } catch(error){
+    next(error);
+  }
+
 });
 
 

@@ -1,6 +1,7 @@
 const DButils = require("./DButils");
 
 async function markAsFavorite(user_id, recipe_id){
+    console.log(user_id)
     const userRecord = await DButils.execQuery(`SELECT recipes_id FROM favorite_recipes WHERE user_id = ${user_id}`);
     if (userRecord.length === 0) {
         // If user doesn't exist, insert a new record
@@ -14,6 +15,23 @@ async function markAsFavorite(user_id, recipe_id){
         await DButils.execQuery(`UPDATE favorite_recipes SET recipes_id = JSON_ARRAY(${recipeIds.join(', ')}) WHERE user_id = ${user_id}`);
     }
 }
+
+
+async function checkIfRecipeExistInFavorites(user_id, recipe_id) {
+    const userRecord = await DButils.execQuery(`SELECT recipes_id FROM favorite_recipes WHERE user_id = ${user_id}`);
+    
+    if (userRecord.length === 0) {
+      return false;
+    } else {
+      let recipesIdArray = userRecord[0].recipes_id;
+  
+      // If recipes_id is a string, parse it to an array
+      if (typeof recipesIdArray === 'string') {
+        recipesIdArray = JSON.parse(recipesIdArray);
+      }
+      return recipesIdArray.includes(Number(recipe_id)); // Ensure recipe_id is a number
+    }
+  }
 
 
 async function deleteRecipeFromFavorites(user_id, recipe_id) {
@@ -214,5 +232,7 @@ module.exports = {
     checkIfRecipeExistInMyRecipes,
     AddToMyRecipes,
     getMyRecipes,
-    getViewedRecipes
+    getViewedRecipes,
+    deleteRecipeFromFavorites,
+    checkIfRecipeExistInFavorites
 };
