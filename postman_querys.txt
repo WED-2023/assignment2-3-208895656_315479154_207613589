@@ -9,7 +9,6 @@ http://localhost:80/auth/login
 
 POST
 http://localhost:80/auth/Register
-Content-Type: application/json
 
 {
     "username": "john_doe",
@@ -23,7 +22,6 @@ Content-Type: application/json
 
 POST
 http://localhost:80/auth/Login
-Content-Type: application/json
 
 {
     "username": "john_doe",
@@ -32,7 +30,6 @@ Content-Type: application/json
 
 POST
 http://localhost:80/auth/Logout
-Content-Type: application/json
 
 
 users:
@@ -46,6 +43,8 @@ http://localhost:80/users/favorites :
 {
     "recipeId": 123
 }
+
+********************* I'm here!!!!!!! *********************************
 
 POST
 http://localhost:80/users/last_watch :
