@@ -1,7 +1,7 @@
 auth:
 
 POST
-http://localhost:80/auth/login  :
+http://localhost:80/auth/login
 {
     "username": "galevi",
     "password": "gal123"
