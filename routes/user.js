@@ -130,7 +130,7 @@ router.post('/meal_plan', async (req,res,next) => {
     const recipe_id = req.body.recipeId;
     const isRecipeExist = await user_utils.checkIfRecipeExistInMealPlan(user_id, recipe_id);
     if (isRecipeExist) {
-      res.status(400).send("Recipe already exists in meal plan");
+      res.status(200).send("Recipe already exists in meal plan");
     } else {
       await user_utils.add_to_meal_plan(user_id, recipe_id);
       res.status(200).send("The Recipe successfully saved as meal plan");

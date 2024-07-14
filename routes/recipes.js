@@ -38,8 +38,9 @@ router.get("/random", async (req, res, next) => {
  */
 router.get("/full_view/:recipeId", async (req, res, next) => {
   try {
-    console.log("req.params.recipeId", req.params.recipeId);
+    // console.log("req.params.recipeId", req.params.recipeId);
     const recipe = await recipes_utils.getRecipeInformation(req.params.recipeId);
+    // console.log("recipe", recipe);
     res.send(recipe.data);
   } catch (error) {
     next(error);

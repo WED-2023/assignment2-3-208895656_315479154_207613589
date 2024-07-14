@@ -44,7 +44,7 @@ http://localhost:80/users/favorites :
     "recipeId": 123
 }
 
-********************* I'm here!!!!!!! *********************************
+
 
 POST
 http://localhost:80/users/last_watch :
@@ -52,19 +52,23 @@ http://localhost:80/users/last_watch :
     "recipeId": 456
 }
 
+
 GET
 http://localhost:80/users/last_watch  :
 {}
 
+
 GET
 http://localhost:80/users/meal_plan  :
 {}
+
 
 POST
 http://localhost:80/users/meal_plan :
 {
     "recipeId": 789
 }
+
 
 DELETE
 http://localhost:80/users/meal_plan :
@@ -78,6 +82,8 @@ http://localhost:80/users//meal_plan_count :
 
 }
 
+
+
 PUT
 http://localhost:80/users/meal_plan :
 {
@@ -89,6 +95,8 @@ http://localhost:80/users/viewd_recipes :
 {
     "recipeId": 333
 }
+
+********************* I'm here!!!!!!! *********************************
 
 POST
 http://localhost:80/users/my_recipes :
