@@ -193,11 +193,12 @@ router.post('/viewd_recipes', async (req,res,next) => {
 });
 
 
-router.get('/viewd_recipes', async (req,res,next) => {
+router.get('/is_watched', async (req,res,next) => {
   try{
     const user_id = req.session.user_id;
-    const recipes_id = await user_utils.getViewedRecipes(user_id);
-    res.status(200).send(recipes_id);
+    const recipe_id = req.query.recipeId;
+    const watched = await user_utils.checkIfRecipeViewed(user_id, recipe_id);
+    res.status(200).send(watched);
   } catch(error){
     next(error);
   }

@@ -158,9 +158,15 @@ async function checkIfRecipeViewed(user_id, recipe_id) {
     const userRecord = await DButils.execQuery(`SELECT recipe_ids FROM viewed_recipes WHERE user_id = ${user_id}`);
     if (userRecord.length === 0) {
         return false;
-    } else {
-        return userRecord[0].recipe_ids.includes(recipe_id);
-    }
+      } else {
+        let recipesIdArray = userRecord[0].recipe_ids;
+    
+        // If recipes_id is a string, parse it to an array
+        if (typeof recipesIdArray === 'string') {
+          recipesIdArray = JSON.parse(recipesIdArray);
+        }
+        return recipesIdArray.includes(Number(recipe_id)); // Ensure recipe_id is a number
+      }
 }
 
 
