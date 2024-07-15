@@ -96,8 +96,6 @@ http://localhost:80/users/viewd_recipes :
     "recipeId": 333
 }
 
-********************* I'm here!!!!!!! *********************************
-
 POST
 http://localhost:80/users/my_recipes :
 {
@@ -125,6 +123,7 @@ http://localhost:80/users/my_recipes :
 }
 
 
+
 GET
 http://localhost:80/users/my_recipes  :
 {}
@@ -139,6 +138,7 @@ Content-Type: application/json
 
 {}
 
+********************* I'm here!!!!!!! *********************************
 GET
 http://localhost:80/recipes/search
  {

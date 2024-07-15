@@ -23,7 +23,7 @@ router.use(async function (req, res, next) {
 });
 
 
-router.get("/kaki", (req, res) => res.send("pipi"));
+router.get("/alive", (req, res) => res.send("alive"));
 
 
 /**
@@ -211,7 +211,7 @@ router.post('/my_recipes', async (req,res,next) => {
     const title = req.body.title;
     const isRecipeExist = await user_utils.checkIfRecipeExistInMyRecipes(user_id, title);
     if (isRecipeExist) {
-      res.status(400).send("Recipe name already exists in my recipes");
+      res.status(200).send("Recipe name already exists in my recipes");
     } else {
       const analyzedInstructions = req.body.analyzedInstructions;
       const extendedIngredients = req.body.extendedIngredients;
@@ -237,6 +237,19 @@ router.get('/my_recipes', async (req,res,next) => {
     const user_id = req.session.user_id;
     const recipes = await user_utils.getMyRecipes(user_id);
     res.status(200).send(recipes);
+  } catch(error){
+    next(error);
+  }
+});
+
+
+router.get('/my_recipe', async (req,res,next) => {
+  try{
+    const user_id = req.session.user_id;
+    const title = req.query.title;
+    // console.log('get my_recipe title:',title);
+    const recipe = await user_utils.getMyRecipe(user_id, title);
+    res.status(200).send(recipe);
   } catch(error){
     next(error);
   }

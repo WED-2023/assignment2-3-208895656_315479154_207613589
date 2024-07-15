@@ -223,6 +223,45 @@ async function getMyRecipes(user_id) {
     }
 }
 
+
+async function getMyRecipe(user_id, title) {
+    try {
+      // SQL query to fetch recipes
+  
+      // Execute the query using DButils.execQuery
+      const recipe = await DButils.execQuery(`
+        SELECT 
+            vegetarian, vegan, glutenFree, extendedIngredients, title, 
+            readyInMinutes, servings, image, analyzedInstructions
+        FROM my_recipes
+        WHERE user_id = ${user_id} AND title = '${title}'`);
+  
+      // If no recipes found, return an empty object
+      if (recipe.length === 0) {
+        return {};
+      }
+      console.log("getMyRecipe recipe", recipe)
+      // Transform the result into the desired JSON format
+      const formattedRecipe = recipe.map(row => ({
+        vegetarian: row.vegetarian,
+        vegan: row.vegan,
+        glutenFree: row.glutenFree,
+        extendedIngredients: typeof row.extendedIngredients === 'string' ? JSON.parse(row.extendedIngredients) : row.extendedIngredients,
+        title: row.title,
+        readyInMinutes: row.readyInMinutes,
+        servings: row.servings,
+        image: row.image,
+        analyzedInstructions: typeof row.analyzedInstructions === 'string' ? JSON.parse(row.analyzedInstructions) : row.analyzedInstructions
+    }));
+        console.log("getMyRecipe formattedRecipe", formattedRecipe)
+      return formattedRecipe;
+    } catch (error) {
+      console.error('Error fetching recipes:', error.message);
+      throw error;
+    }
+
+}
+
 module.exports = {
     markAsFavorite,
     getFavoriteRecipes,
@@ -240,5 +279,6 @@ module.exports = {
     getMyRecipes,
     getViewedRecipes,
     deleteRecipeFromFavorites,
-    checkIfRecipeExistInFavorites
+    checkIfRecipeExistInFavorites,
+    getMyRecipe
 };
