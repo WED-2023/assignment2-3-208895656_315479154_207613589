@@ -78,4 +78,17 @@ router.post("/Logout", function (req, res) {
   res.send({ success: true, message: "logout succeeded" });
 });
 
+
+router.get("/current_user", async (req, res, next) => {
+  try {
+    if (req.session.user_id === undefined) {
+      throw { status: 401, message: "unauthorized" };
+    }
+    res.status(200).send({ data: req.session.user_id });
+  } catch (error) {
+    next(error);
+  }
+});
+
+
 module.exports = router;
