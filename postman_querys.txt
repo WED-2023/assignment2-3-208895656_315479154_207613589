@@ -1,0 +1,161 @@
+auth:
+
+POST
+http://localhost:80/auth/login
+{
+    "username": "galevi",
+    "password": "gal123"
+}
+
+POST
+http://localhost:80/auth/Register
+
+{
+    "username": "john_doe",
+    "firstname": "John",
+    "lastname": "Doe",
+    "country": "USA",
+    "password": "secure_password",
+    "email": "john.doe@example.com",
+    "profilePic": "https://example.com/profile_pic.jpg"
+}
+
+POST
+http://localhost:80/auth/Login
+
+{
+    "username": "john_doe",
+    "password": "secure_password"
+}
+
+POST
+http://localhost:80/auth/Logout
+
+
+users:
+
+GET
+http://localhost:80/users/favorites  :
+{}
+
+POST
+http://localhost:80/users/favorites :
+{
+    "recipeId": 123
+}
+
+
+
+POST
+http://localhost:80/users/last_watch :
+{
+    "recipeId": 456
+}
+
+
+GET
+http://localhost:80/users/last_watch  :
+{}
+
+
+GET
+http://localhost:80/users/meal_plan  :
+{}
+
+
+POST
+http://localhost:80/users/meal_plan :
+{
+    "recipeId": 789
+}
+
+
+DELETE
+http://localhost:80/users/meal_plan :
+{
+    "recipeId": 789
+}
+
+GET
+http://localhost:80/users//meal_plan_count :
+{
+
+}
+
+
+
+PUT
+http://localhost:80/users/meal_plan :
+{
+    "recipesId": [25, 60, 80, 1000]
+}
+
+POST
+http://localhost:80/users/viewd_recipes :
+{
+    "recipeId": 333
+}
+
+POST
+http://localhost:80/users/my_recipes :
+{
+    "analyzedInstructions": [{ "step": "Boil water and cook spaghetti according to package instructions." }, { "step": "Cook bacon until crispy." }],
+    "extendedIngredients": [{ "name": "Spaghetti", "amount": 200, "unit": "grams" }, { "name": "Bacon", "amount": 100, "unit": "grams" }],
+    "title": "Spaghetti Carbonara",
+    "image": "https://example.com/spaghetti_carbonara.jpg",
+    "vegetarian": false,
+    "vegan": false,
+    "glutenFree": false,
+    "readyInMinutes": 30,
+    "servings": 2
+}
+
+{
+    "analyzedInstructions": [{ "step": "Preheat oven to 350°F (175°C)." }, { "step": "Mix flour, baking soda, and salt in a bowl." }],
+    "extendedIngredients": [{ "name": "Flour", "amount": 150, "unit": "grams" }, { "name": "Baking Soda", "amount": 5, "unit": "grams" }],
+    "title": "Homemade Cookies",
+    "image": "https://example.com/homemade_cookies.jpg",
+    "vegetarian": true,
+    "vegan": false,
+    "glutenFree": false,
+    "readyInMinutes": 45,
+    "servings": 12
+}
+
+
+
+GET
+http://localhost:80/users/my_recipes  :
+{}
+
+
+
+recipes:
+
+GET
+http://localhost:80/kaki
+Content-Type: application/json
+
+{}
+
+********************* I'm here!!!!!!! *********************************
+GET
+http://localhost:80/recipes/search
+ {
+    "recipeName": "chicken",
+    "cuisine": "",
+    "diet": "",
+    "intolerance": "",
+    "number": 10
+  }
+
+
+GET
+http://localhost:80/recipes/full_view/123
+{}
+
+GET
+http://localhost:80/recipes/123
+Content-Type: application/json
+
+{}

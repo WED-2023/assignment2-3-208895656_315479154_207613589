@@ -36,6 +36,9 @@ router.post("/Register", async (req, res, next) => {
       `INSERT INTO users (username, firstname, lastname, country, email, password) 
       VALUES ('${user_details.username}', '${user_details.firstname}', '${user_details.lastname}', 
       '${user_details.country}', '${user_details.email}', '${hash_password}')`
+      `INSERT INTO users (username, firstname, lastname, country, email, password) 
+      VALUES ('${user_details.username}', '${user_details.firstname}', '${user_details.lastname}', 
+      '${user_details.country}', '${user_details.email}', '${hash_password}')`
     );
     
     res.status(201).send({ message: "user created", success: true });
@@ -83,6 +86,19 @@ router.post("/Logout", function (req, res) {
   req.session.reset(); // reset the session info --> send cookie when  req.session == undefined!!
   res.send({ success: true, message: "logout succeeded" });
 });
+
+
+router.get("/current_user", async (req, res, next) => {
+  try {
+    if (req.session.user_id === undefined) {
+      throw { status: 401, message: "unauthorized" };
+    }
+    res.status(200).send({ data: req.session.user_id });
+  } catch (error) {
+    next(error);
+  }
+});
+
 
 
 router.get("/current_user", async (req, res, next) => {
