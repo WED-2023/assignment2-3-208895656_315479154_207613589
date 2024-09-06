@@ -26,15 +26,15 @@ app.use(
 app.use(express.urlencoded({ extended: false })); // parse application/x-www-form-urlencoded
 app.use(express.static(path.join(__dirname, "public"))); //To serve static files such as images, CSS files, and JavaScript files
 //local:
-app.use(express.static(path.join(__dirname, "dist")));
+// app.use(express.static(path.join(__dirname, "dist")));
 //remote:
-// app.use(express.static(path.join(__dirname, '../assignment-3-3-basic/dist')));
+app.use(express.static(path.join(__dirname, '../assignment2-1-main/dist')));
 app.get("/",function(req,res)
 { 
   //remote: 
-  // res.sendFile(path.join(__dirname, '../assignment-3-3-basic/dist/index.html'));
+  res.sendFile(path.join(__dirname, '../assignment2-3-main/dist/index.html'));
   //local:
-  res.sendFile(__dirname+"/index.html");
+  // res.sendFile(__dirname+"/index.html");
 
 });
 
@@ -56,17 +56,35 @@ const recipes = require("./routes/recipes");
 const auth = require("./routes/auth");
 
 
+// app.use(function (req, res, next) {
+//   // console.log("req.session in main", req.session)
+//   // console.log("req.session.user_id in main", req.session.user_id)
+//   if (req.session && req.session.user_id) {
+//     DButils.execQuery("SELECT user_id FROM users")
+//       .then((users) => {
+//         if (users.find((x) => x.user_id === req.session.user_id)) {
+//           req.user_id = req.session.user_id;
+//         }
+//         next();
+//       })
+//       .catch((error) => next());
+//   } else {
+//     next();
+//   }
+// });
+
 //#region cookie middleware
 app.use(function (req, res, next) {
-  if (req.session && req.session.user_id) {
+  let user_id = req.headers['x-user-id'];
+  if (user_id) {
     DButils.execQuery("SELECT user_id FROM users")
       .then((users) => {
-        if (users.find((x) => x.user_id === req.session.user_id)) {
-          req.user_id = req.session.user_id;
+        if (users.find((x) => x.user_id === user_id)) {
+          req.user_id = user_id;
         }
         next();
       })
-      .catch((error) => next());
+      .catch((error) => next(error));
   } else {
     next();
   }
@@ -89,13 +107,15 @@ app.use(function (err, req, res, next) {
 
 
 
-const server = app.listen(port, () => {
-  console.log(`Server listen on port ${port}`);
-});
+// const server = app.listen(port, () => {
+//   console.log(`Server listen on port ${port}`);
+// });
 
-process.on("SIGINT", function () {
-  if (server) {
-    server.close(() => console.log("server closed"));
-  }
-  process.exit();
-});
+// process.on("SIGINT", function () {
+//   if (server) {
+//     server.close(() => console.log("server closed"));
+//   }
+//   process.exit();
+// });
+
+module.exports = app;
