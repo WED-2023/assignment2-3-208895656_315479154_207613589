@@ -272,8 +272,10 @@ async function clearMealPlan(user_id) {
     if (!user_id) throw new Error("User ID is required for clearing meal plan");
   
     // SQL query to delete all entries in the meal_plan table for this user
-    await DButils.execQuery(`DELETE FROM meal_plan WHERE user_id = ${user_id}`);
-    console.log(`Meal plan cleared for user_id: ${user_id}`);
+    // await DButils.execQuery(`DELETE FROM meal_plan WHERE user_id = ${user_id}`);
+    // console.log(`Meal plan cleared for user_id: ${user_id}`);
+    await DButils.execQuery(`UPDATE meal_plan SET recipe_ids = JSON_ARRAY() WHERE user_id = ${user_id}`);
+    console.log(`Meal plan set to empty array for user_id: ${user_id}`);
   }
 
 module.exports = {
