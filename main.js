@@ -28,16 +28,15 @@ app.use(express.static(path.join(__dirname, "public"))); //To serve static files
 //local:
 // app.use(express.static(path.join(__dirname, "dist")));
 //remote:
-app.use(express.static(path.join(__dirname, '../assignment-3-3-basic/dist')));
+app.use(express.static(path.join(__dirname, '../assignment2-1-208895656_315479154_207613589/dist')));
 app.get("/",function(req,res)
 { 
   //remote: 
-  res.sendFile(path.join(__dirname, '../assignment-3-3-basic/dist/index.html'));
+  res.sendFile(path.join(__dirname, '../assignment2-3-208895656_315479154_207613589/dist/index.html'));
   //local:
   // res.sendFile(__dirname+"/index.html");
 
 });
-
 // app.use(cors());
 // app.options("*", cors());
 
